@@ -3,6 +3,7 @@ package parsing;
 import com.opencsv.CSVWriter;
 import model.Product;
 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,25 @@ public class ProductParsing {
             products = stream.map(s->s.split(";"))
                     .map(s->new Product(s[3],parsePrice(s[6])))
                     .collect(Collectors.toList());
+        }
+        File file = new File("src/data/product.csv");
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            CSVWriter writer = new CSVWriter(fileWriter);
+
+            // adding header to csv
+            String[] header = {"name", "price"};
+            writer.writeNext(header);
+
+
+            products.stream
+                    ()
+                    .map(p -> new String[]{p.getName(), Integer.toString(p.getPrice())})
+                    .forEach(writer::writeNext);
+
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
